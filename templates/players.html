@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+	.flex-container{
+  display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+  display: -ms-flexbox;  /* TWEENER - IE 10 */
+  display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+  
+  justify-content: center;
+  align-items: center;
+  
+  width: 100%;
+  height: 100vh;
+  background-color: #3498db;
+}
+
+.inner-element{
+  width: 100px;
+  height: 500px;
+  display:flex;
+  overflow: auto;
+}
+</style>
+<h1>Players in the lobby</h1>
+<div class="flex-container">
+ 
+
+<div class="inner-element">
+<h2 >
+  <ol>
+  	{%for i in players%}
+  		<li>{{i}}</li>
+  	{%endfor%}
+  </ol>
+  {%if present == False%}
+  	<a href="{{ url_for('app_game.add_player')}}"><button>Add me</button></a>
+  {%endif%}
+  {%if present == True%}
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  	<script type="text/javascript">
+  	function start_game()
+  	{
+		$.ajax({
+	        url: '/game_query',
+	        success:  function(data) {
+	        	console.log(data);
+	            if (data=="True")
+	            	window.location.href = "/bid";
+	            else
+	            	window.location.href = "/players";
+	        },
+	        timeout: 5000 //If timeout is reached run again
+	    });
+	}
+	setInterval(start_game, 5000);
+	</script>
+  	<a href="{{ url_for('app_game.start_game')}}"><button>Start Game</button></a>
+  {%endif%}
+</h2>
+</div>
+</div>
+{% endblock %}
